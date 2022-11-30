@@ -32,23 +32,43 @@ Post.prototype.validate = function() {
   if (this.data.body == "") {this.errors.push("You must provide post content.")}
 }
 
-Post.prototype.create = function() {
-  return new Promise((resolve, reject) => {
-    this.cleanUp()
-    this.validate()
-    if (!this.errors.length) {
-      // save post into database
-      postsCollection.insertOne(this.data).then((info) => {
-        resolve(info.insertedId)          // mongo has property on returned value insertedId
-      }).catch(() => {
-        this.errors.push("Please try again later.")
-        reject(this.errors)
-      })
-    } else {
-      reject(this.errors)
+// Post.prototype.create = function() {
+//   return new Promise((resolve, reject) => {
+//     this.cleanUp()
+//     this.validate()
+//     if (!this.errors.length) {
+//       // save post into database
+//       postsCollection.insertOne(this.data).then((info) => {
+//         resolve(info.insertedId)          // mongo has property on returned value insertedId
+//       }).catch(() => {
+//         this.errors.push("Please try again later.")
+//         reject(this.errors)
+//       })
+//     } else {
+//       reject(this.errors)
+//     }
+//   })
+// }
+
+
+// Same as above but using async await
+Post.prototype.create = async function() {             // Can't have ()=> arrow function here because we need this to point to post. Arrow would look at global.
+  this.cleanUp()                                     // An async function returns a promise therefore new Promise((resolve, reject)...) not required
+  this.validate()
+  if (!this.errors.length) {
+    try {
+    // save post into database
+    let info = await postsCollection.insertOne(this.data)           // then() captures the output whereas await needs to have output assigned to something.
+      return info.insertedId          // mongo has property on returned value insertedId
+    } catch(errors) {
+      this.errors.push("Please try again later.")
+      return this.errors
     }
-  })
+  } else {
+    return this.errors
+  }
 }
+
 
 Post.prototype.update = function(){
   return new Promise(async (resolve, reject)=>{
