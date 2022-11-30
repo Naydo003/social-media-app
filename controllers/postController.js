@@ -26,9 +26,6 @@ exports.apiCreatePost = function(req, res) {
 
 exports.viewSingle = async function(req, res) {
   try {
-    console.log(req.params.id)
-    console.log(req.visitorId)
-
     let post = await Post.findSingleById(req.params.id, req.visitorId)
     res.render('single-post-screen', {post: post, title: post.title})
   } catch {

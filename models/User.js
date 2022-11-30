@@ -66,7 +66,6 @@ User.prototype.login = function() {
   return new Promise((resolve, reject)=>{     // Note must be arrow function so not to disturb THIS
     this.cleanUp()
     usersCollection.findOne({username: this.data.username}).then((attemptedUser) => {      // findOne() and all other mongo methods return promises
-      console.log(attemptedUser)
       if (attemptedUser && bcrypt.compareSync(this.data.password, attemptedUser.password)) {                 // this will return the found thing or an error object
         this.data = attemptedUser
         this.avatar = "https://lwlies.com/wp-content/uploads/2017/04/avatar-2009.jpg"

@@ -117,7 +117,6 @@ export default class RegistrationForm {
 
     if (!this.email.errors) {
       axios.post('/doesEmailExist', {_csrf: this._csrf, email: this.email.value}).then((response) => {
-        console.log(response)
         if (response.data) {
           this.email.isUnique = false
           this.showValidationError(this.email, "That email is already being used.")

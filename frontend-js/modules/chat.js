@@ -56,22 +56,17 @@ export default class Chat {
   
     // This essentially opens the connection and sets it listening for our custom event
     openConnection() {
-        console.log("********************************")
       this.socket = io()        // The socket connection is stored in a variable called server.
       this.socket.on('welcome', data => {
-        console.log("does this work")
         this.username = data.username
         this.avatar = data.avatar
       })
-      this.socket.on('chatMessageFromServer', (data) => { 
-        console.log("hit me") 
+      this.socket.on('chatMessageFromServer', (data) => {  
         this.displayMessageFromServer(data)
       })
     }
   
     displayMessageFromServer(data) {
-        console.log("Fuck ya")
-        console.log(data)
         this.chatLog.insertAdjacentHTML('beforeend', DOMpurify.sanitize(`
         <div class="chat-other">
             <a href="/profile/${data.username}"><img class="avatar-tiny" src="${data.avatar}"></a>

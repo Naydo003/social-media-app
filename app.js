@@ -88,16 +88,13 @@ io.use(function(socket, next) {                         // allows socket to acce
 })
 
 io.on('connection', function(socket) {
-  console.log('A new user connected')
   if (socket.request.session.user) {     // Only if logged in accept messages to send out
     let user = socket.request.session.user
     
     socket.emit('welcome', {username: user.username, avatar: user.avatar })
     
     socket.on('chatMessageFromBrowser', function(data){          // When socket recieves our custom event
-      console.log("hit")
       socket.broadcast.emit('chatMessageFromServer', {message: sanitizeHTML(data.message, {allowedTags: [], allowedAttributes: {}}), username: user.username, avatar: "https://lwlies.com/wp-content/uploads/2017/04/avatar-2009.jpg"})    // This sends out a custom event to everyone but user. note if wrote socket.emit we would respond to our browser only. io.emit sends to everyone. 
-      console.log("after broadcast")
     })
   }
 })

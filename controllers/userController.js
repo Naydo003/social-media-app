@@ -65,8 +65,6 @@ exports.mustBeLoggedIn = function (req, res, next) {
 
 // Handling the async nature of login() using a promise.
 exports.login = function(req, res) {
-  console.log("usercont recieved")
-  console.log(req.body)
   let user = new User(req.body)
   user.login().then(function(result){        // login() will return a promise ie either resolve or reject (defined in User.js)
     req.session.user = {username: user.data.username, avatar: user.avatar, _id: user.data._id}
@@ -82,8 +80,6 @@ exports.login = function(req, res) {
 }
 
 exports.apiLogin = function(req, res) {
-  console.log("apiLogin recieved")
-  console.log(req.body)
   let user = new User(req.body)
   user.login().then(function(result){        // login() will return a promise ie either resolve or reject (defined in User.js)
     res.json(jwt.sign({_id: user.data._id}, process.env.JWTSECRET, {expiresIn: '7d'}))    // jwt.sign({data to be passed across}, secret code, { options })
